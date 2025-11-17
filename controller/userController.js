@@ -47,9 +47,6 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ message: "User not found." })
         }
 
-        if (err.name === "CastError") {
-            return res.status(404).json({ message: "User not found." });
-        }
         const updateUser = await User.findByIdAndUpdate(id, req.body, { new: true });
         res.status(200).json(updateUser);
 
