@@ -46,11 +46,29 @@ export const updateUser = async (req, res) => {
         if (!exitUser) {
             return res.status(404).json({ message: "User not found." })
         }
+
+        if (err.name === "CastError") {
+            return res.status(404).json({ message: "User not found." });
+        }
         const updateUser = await User.findByIdAndUpdate(id, req.body, { new: true });
         res.status(200).json(updateUser);
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const exitUser = await User.findById(id);
+        if (!exitUser) {
+            return res.status(404).json({ message: "User not found." })
+        }
+        await User.findByIdAndDelete(id);
+        res.status(200).json({ message: "User deleted successfully." })
+    } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
